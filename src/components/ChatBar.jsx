@@ -1,0 +1,28 @@
+import React, { useState } from "react";
+import { chatsData } from "../data/chatsData";
+import Chat from "./Chat";
+
+export default function ChatBar({ filter }) {
+  const [chats, setChats] = useState(chatsData);
+
+  return (
+    // main chats container
+    <div className="flex flex-col overflow-y-scroll cursor-pointer h-full ">
+      {/* chats */}
+      <div>
+        {chats.map((chat) => {
+          return (
+            <Chat
+              pp={chat.pp}
+              contact={chat.contact}
+              msg={chat.msg}
+              time={chat.time}
+              unread={chat.unreadMsgs}
+              active={0}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ChatBar from "./ChatBar";
 import Roundedbtn from "./common/roundedbtn";
 import { MdPeople } from "react-icons/md";
 import { TbCircleDashed } from "react-icons/tb";
@@ -14,7 +15,7 @@ export default function LeftMenu() {
     <div className="flex flex-col border-r border-neutral-700 w-full h-screen">
       {/* profile bar */}
       <div className="flex justify-between items-center bg-[#202d33] h-[60px] p-3 ">
-        <img src={pp} alt="profile_pic" className=" rounded-full w-[35px]  " />
+        <img src={pp} alt="profile_pic" className=" rounded-full w-[32px]  " />
         <div className="flex justify-between w-[150px]">
           <Roundedbtn icon={<MdPeople size={22} />} />
           <Roundedbtn icon={<TbCircleDashed size={20} />} />
@@ -24,7 +25,7 @@ export default function LeftMenu() {
       </div>
 
       {/* seatch bar */}
-
+    {/* add a name of the app here */}
       <div className="flex justify-between items-center h-[60px] p-3 ">
         <input
           type="text"
@@ -48,6 +49,7 @@ export default function LeftMenu() {
           <BiFilter size={20} />
         </button>
       </div>
+      <ChatBar filter={filter}/>
     </div>
   );
 }
