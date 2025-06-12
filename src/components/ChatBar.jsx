@@ -10,7 +10,7 @@ export default function ChatBar({ filter }) {
     <div className="flex flex-col overflow-y-scroll cursor-pointer h-full ">
       {/* chats */}
       <div>
-        {chats.map((chat) => {
+        {chats.map((chat,i) => {
           return (
             <Chat
               pp={chat.pp}
@@ -18,7 +18,7 @@ export default function ChatBar({ filter }) {
               msg={chat.msg}
               time={chat.time}
               unread={chat.unreadMsgs}
-              active={0}
+              active={i===0}
             />
           );
         })}
