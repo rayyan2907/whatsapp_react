@@ -1,5 +1,8 @@
 import React from "react";
 import { cs1 } from "../assets/whatsapp";
+import Roundedbtn from "./common/roundedbtn";
+import { AiOutlinePaperClip } from "react-icons/ai";
+import { BsFillMicFill } from "react-icons/bs";
 
 export default function ChatDetail() {
   return (
@@ -45,13 +48,45 @@ export default function ChatDetail() {
       </div>
 
       {/* messages */}
-      <div></div>
+      <div className="h-full"></div>
 
       {/* send messages */}
       <div className="flex items-center bg-[#202d33] w-full h-[70px] p-2 ">
         {/* upload */}
-        {/* mic */}
+        <span
+          style={{
+            margin: 20,
+          }}
+        >
+          <Roundedbtn icon={<AiOutlinePaperClip size={20} />} />
+        </span>
         {/* text box */}
+        <input
+          type="text"
+          placeholder="Type a message"
+          style={{
+            borderRadius: "9999px", // fully rounded
+            border: "none",
+            backgroundColor: "#2c3943",
+            color: "#e5e5e5",
+            fontSize: "0.875rem", // text-sm
+            fontWeight: "300", // font-light
+            outline: "none",
+            paddingLeft: "1rem", // px-4
+            paddingRight: "1rem",
+            paddingTop: "0.5rem", // py-2
+            paddingBottom: "0.5rem",
+            width: "100%",
+            height: "40px",
+          }}
+        />
+        {/* mic */}
+        <span
+        style={{
+          margin:12,
+        }}>
+          <Roundedbtn icon={<BsFillMicFill size={19} />} />
+        </span>
         {/* send */}
       </div>
     </div>

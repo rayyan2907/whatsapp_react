@@ -25,12 +25,26 @@ export default function LeftMenu() {
       </div>
 
       {/* seatch bar */}
-    {/* add a name of the app here */}
+      {/* add a name of the app here */}
       <div className="flex justify-between items-center h-[60px] p-3 ">
         <input
           type="text"
-          placeholder="  Search or start a new chat"
-          className="rounded-full border-none bg-[#202d33] text-[#8796a1] text-sm font-light outline-none px-4 py-2 w-full h-[40px] placeholder:text-[#8796a1] placeholder:text-sm placeholder:font-light"
+          placeholder="Search or start a new chat"
+          style={{
+            borderRadius: "9999px", // fully rounded
+            border: "none",
+            backgroundColor: "#202d33",
+            color: "#e5e5e5",
+            fontSize: "0.875rem", // dext-sm
+            fontWeight: "300", // font-light
+            outline: "none",
+            paddingLeft: "1rem", // px-4
+            paddingRight: "1rem",
+            paddingTop: "0.5rem", // py-2
+            paddingBottom: "0.5rem",
+            width: "100%",
+            height: "40px",
+          }}
         />
         <button
           style={{
@@ -41,15 +55,12 @@ export default function LeftMenu() {
             borderRadius: "9999px", // fully rounded
             margin: "0.5rem",
           }}
-          onClick={() => setFilter(
-                !filter
-            )}
+          onClick={() => setFilter(!filter)}
         >
-            
           <BiFilter size={20} />
         </button>
       </div>
-      <ChatBar filter={filter}/>
+      <ChatBar filter={filter} />
     </div>
   );
 }
