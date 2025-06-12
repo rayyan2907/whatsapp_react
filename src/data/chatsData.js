@@ -19,7 +19,7 @@ import {
 export const chatsData = [
   {
     pp: cs1,
-    contact: "Coding Spot",
+    contact: "RAYYAN",
     msg: "Awesome, thank you!",
     time: "1:15 pm",
     unreadMsgs: null,
