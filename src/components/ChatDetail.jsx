@@ -1,10 +1,21 @@
-import React from "react";
+import React,{useState} from "react";
 import { cs1 } from "../assets/whatsapp";
 import Roundedbtn from "./common/roundedbtn";
 import { AiOutlinePaperClip } from "react-icons/ai";
 import { BsFillMicFill } from "react-icons/bs";
+import { MdSend } from "react-icons/md";
+import { messagesData } from "../data/chatsData";
+import Message from "./Message";
+
 
 export default function ChatDetail() {
+
+
+  const [messages, setMessages]=useState(messagesData);
+
+
+
+
   return (
     <div className="flex flex-col h-screen">
       {/* contact nav */}
@@ -48,10 +59,28 @@ export default function ChatDetail() {
       </div>
 
       {/* messages */}
-      <div className="h-full"></div>
+      <div 
+      className="bg-[#0a131a] h-full overflow-y-scroll "
+      style={{
+        padding: "12px 7%",
+      }}
+      >
+        {
+          messages.map((msg)=> 
+            <Message
+              msg={msg.msg}
+              time={msg.time}
+              img={msg.img}
+              isLink={msg.isLink}
+              sent={msg.sent}
+            />
+          )
+        }
+
+      </div>
 
       {/* send messages */}
-      <div className="flex items-center bg-[#202d33] w-full h-[70px] p-2 ">
+      <div className="flex items-center bg-[#202d33] w-full h-[55px] p-2 ">
         {/* upload */}
         <span
           style={{
@@ -69,7 +98,7 @@ export default function ChatDetail() {
             border: "none",
             backgroundColor: "#2c3943",
             color: "#e5e5e5",
-            fontSize: "0.875rem", // text-sm
+            fontSize: "0.96rem", // text-sm
             fontWeight: "300", // font-light
             outline: "none",
             paddingLeft: "1rem", // px-4

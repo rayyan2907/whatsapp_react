@@ -174,6 +174,12 @@ export const chatsData = [
 ];
 
 export const messagesData = [
+
+  {
+    img: cs2,
+    time: "11:56 am",
+    sent: true,
+  },
   {
     msg: "Hey wassupp bro!",
     time: "10:58 am",

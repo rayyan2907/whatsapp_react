@@ -9,7 +9,7 @@ import { BiFilter } from "react-icons/bi";
 import { pp } from "../assets/whatsapp";
 
 export default function LeftMenu() {
-  const [filter, setFilter] = useState(true);
+  const [filter, setFilter] = useState(false);
 
   return (
     <div className="flex flex-col border-r border-neutral-700 w-full h-screen">
