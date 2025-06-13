@@ -35,7 +35,7 @@ export default function Message({ msg, time, isLink, img, sent }) {
           className="flex justify-between items-end h-fit max-w-[410px] p-2 "
           style={{
             wordBreak: "break-word",
-            padding: "10px",
+            padding: "15px",
           }}
         >
           <p
@@ -47,7 +47,10 @@ export default function Message({ msg, time, isLink, img, sent }) {
           >
             {msg}
           </p>
-          <p className="text-[#8796a1] text-[10px] min-w-[50px] ">
+          <p className="text-[#8796a1] text-[10px] min-w-[50px] "
+          style={{
+            marginLeft: "10px",
+          }}>
             {time}
           </p>
         </div>

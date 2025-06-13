@@ -11,6 +11,7 @@ import { getTime } from "../logic/functions";
 export default function ChatDetail() {
   const [messages, setMessages] = useState(messagesData);
   const inputRef = useRef(null);
+  const bottomRef = useRef(null)
   const [typing, setTyping] = useState(false);
 
   const HandelInput = ()=> {
@@ -24,6 +25,9 @@ export default function ChatDetail() {
   }
 
  const handelInput = ()=>{
+    
+
+  if(inputRef.current.value.length>0){
 
     addMessage({
       msg: inputRef.current.value,
@@ -33,12 +37,31 @@ export default function ChatDetail() {
     inputRef.current.value=""
     inputRef.current.focus()
     setTyping(false)
-
+  }
 
 
   }
 
 
+  useEffect(()=>{
+    bottomRef.current?.scrollIntoView({
+      behaviour: "smooth",
+    })
+  },[messages])
+
+
+
+  useEffect(()=>{
+
+    const listener = (e) => {
+      if (e.code==="Enter"){
+        handelInput()
+      }
+    }
+
+    document.addEventListener("keydown",listener)
+    return()=> document.removeEventListener("keydown",listener)
+  })
 
   return (
     <div className="flex flex-col h-screen">
@@ -98,6 +121,7 @@ export default function ChatDetail() {
             sent={msg.sent}
           />
         ))}
+        <div ref={bottomRef}/>
       </div>
 
       {/* send messages */}
