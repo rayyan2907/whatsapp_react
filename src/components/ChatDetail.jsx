@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { cs1 } from "../assets/whatsapp";
 import Roundedbtn from "./common/roundedbtn";
 import { AiOutlinePaperClip } from "react-icons/ai";
@@ -6,13 +6,37 @@ import { BsFillMicFill } from "react-icons/bs";
 import { MdSend } from "react-icons/md";
 import { messagesData } from "../data/chatsData";
 import Message from "./Message";
-
+import { getTime } from "../logic/functions";
 
 export default function ChatDetail() {
+  const [messages, setMessages] = useState(messagesData);
+  const inputRef = useRef(null);
+  const [typing, setTyping] = useState(false);
+
+  const HandelInput = ()=> {
+    inputRef.current.value.length===0 ? setTyping(false) : setTyping(true)
+  }
+
+ 
+  const addMessage = (msg)=>{
+    const newMessage= [...messages,msg ]
+    setMessages(newMessage)
+  }
+
+ const handelInput = ()=>{
+
+    addMessage({
+      msg: inputRef.current.value,
+      time: getTime(),
+      sent: true,
+    })
+    inputRef.current.value=""
+    inputRef.current.focus()
+    setTyping(false)
 
 
-  const [messages, setMessages]=useState(messagesData);
 
+  }
 
 
 
@@ -59,24 +83,21 @@ export default function ChatDetail() {
       </div>
 
       {/* messages */}
-      <div 
-      className="bg-[#0a131a] h-full overflow-y-scroll "
-      style={{
-        padding: "12px 7%",
-      }}
+      <div
+        className="bg-[#0a131a] h-full overflow-y-scroll "
+        style={{
+          padding: "12px 7%",
+        }}
       >
-        {
-          messages.map((msg)=> 
-            <Message
-              msg={msg.msg}
-              time={msg.time}
-              img={msg.img}
-              isLink={msg.isLink}
-              sent={msg.sent}
-            />
-          )
-        }
-
+        {messages.map((msg) => (
+          <Message
+            msg={msg.msg}
+            time={msg.time}
+            img={msg.img}
+            isLink={msg.isLink}
+            sent={msg.sent}
+          />
+        ))}
       </div>
 
       {/* send messages */}
@@ -108,13 +129,20 @@ export default function ChatDetail() {
             width: "100%",
             height: "40px",
           }}
+          onChange={HandelInput}
+          ref={inputRef}
         />
         {/* mic */}
         <span
-        style={{
-          margin:12,
-        }}>
-          <Roundedbtn icon={<BsFillMicFill size={19} />} />
+          style={{
+            margin: 12,
+          }}
+        >
+          {typing ? (
+            <Roundedbtn icon={<MdSend size={19} /> }onClick={handelInput} />
+          ) : (
+            <Roundedbtn icon={<BsFillMicFill size={19} />} />
+          )}
         </span>
         {/* send */}
       </div>
