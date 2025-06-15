@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ChatBar from "./ChatBar";
-import Roundedbtn from "./common/roundedbtn";
+import Roundedbtn from "./common/Roundedbtn";
 import { MdPeople } from "react-icons/md";
 import { TbCircleDashed } from "react-icons/tb";
 import { BsFillChatTextFill } from "react-icons/bs";
