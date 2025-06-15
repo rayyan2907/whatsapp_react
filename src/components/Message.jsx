@@ -47,10 +47,12 @@ export default function Message({ msg, time, isLink, img, sent }) {
           >
             {msg}
           </p>
-          <p className="text-[#8796a1] text-[10px] min-w-[50px] "
-          style={{
-            marginLeft: "10px",
-          }}>
+          <p
+            className="text-[#8796a1] text-[10px] min-w-[50px] "
+            style={{
+              marginLeft: "10px",
+            }}
+          >
             {time}
           </p>
         </div>
