@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import OTPVerification from "./otpVerification";
 import { useNavigate } from "react-router-dom";
 
+
 export default function WhatsAppRegistration() {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
-    dateOfBirth: "",
+    date_of_birth: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -29,8 +30,8 @@ export default function WhatsAppRegistration() {
     setErrorMessage("");
     setMessage("");
 
-    const { firstName, lastName, email, password, dateOfBirth } = formData;
-    if (!firstName || !lastName || !email || !password || !dateOfBirth) {
+    const { first_name, last_name, email, password, date_of_birth } = formData;
+    if (!first_name || !last_name || !email || !password || !date_of_birth) {
       setErrorMessage("All fields are required.");
       setIsLoading(false);
       return;
@@ -42,7 +43,7 @@ export default function WhatsAppRegistration() {
     }
 
     try {
-      const res = await fetch("http://localhost:7285/api/register", {
+      const res = await fetch("https://localhost:7285/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,13 +55,14 @@ export default function WhatsAppRegistration() {
 
       if (res.ok) {
         setMessage("OTP sent to your email");
-        navigate("/otp", { state: { email } });
+        localStorage.setItem("email", email);
+
+        navigate("/otp");
       } else {
-        setErrorMessage(data.message || "Registration failed");
+        setErrorMessage(data.message || data|| "Registration failed");
       }
     } catch (err) {
       setErrorMessage("An error occurred during registration: " + err.message);
-      navigate("/otp", { state: { email } });
     }
 
     setIsLoading(false);
@@ -290,9 +292,9 @@ export default function WhatsAppRegistration() {
             <div style={styles.inputContainer}>
               <input
                 type="text"
-                name="firstName"
+                name="first_name"
                 placeholder="First name"
-                value={formData.firstName}
+                value={formData.first_name}
                 onChange={handleInputChange}
                 style={styles.input}
                 onFocus={(e) =>
@@ -307,9 +309,9 @@ export default function WhatsAppRegistration() {
             <div style={styles.inputContainer}>
               <input
                 type="text"
-                name="lastName"
+                name="last_name"
                 placeholder="Last name"
-                value={formData.lastName}
+                value={formData.last_name}
                 onChange={handleInputChange}
                 style={styles.input}
                 onFocus={(e) =>
@@ -358,8 +360,8 @@ export default function WhatsAppRegistration() {
             <div style={styles.inputContainer}>
               <input
                 type="date"
-                name="dateOfBirth"
-                value={formData.dateOfBirth}
+                name="date_of_birth"
+                value={formData.date_of_birth}
                 onChange={handleInputChange}
                 style={styles.input}
                 onFocus={(e) =>

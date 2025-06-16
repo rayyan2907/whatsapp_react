@@ -6,7 +6,7 @@ export default function OTPVerification() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("OTP sent. Please check your spam for the email.");
   const [resendTimer, setResendTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
   const navigate = useNavigate();
@@ -14,7 +14,6 @@ export default function OTPVerification() {
   const inputRefs = useRef([]);
 
   useEffect(() => {
-    setSuccessMessage("OTP sent. Please check your spam for the email.");
 
     if (resendTimer > 0) {
       const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
@@ -72,29 +71,31 @@ export default function OTPVerification() {
     setErrorMessage("");
 
     try {
-      const res = await fetch("http://localhost:7285/api/verify-otp", {
+        
+      const res = await fetch("https://localhost:7285/api/enterotp", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify({ otp: otpString }),
+        body: new URLSearchParams({
+          email: localStorage.getItem("email"), // Assuming email is saved earlier
+          otp: otpString,
+          
+        }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
         setSuccessMessage("Account verified successfully!");
-        navigate("/", {
-          state: { successMessage: "Account created successfully" },
-        });
+        navigate("/pic");
+        
       } else {
         setErrorMessage(data.message || "Invalid OTP");
       }
     } catch (err) {
       setErrorMessage("An error occurred during verification: " + err.message);
-      navigate("/", {
-        state: { successMessage: "Account created successfully" },
-      });
+      setSuccessMessage("")
     }
 
     setIsLoading(false);
@@ -108,7 +109,7 @@ export default function OTPVerification() {
     setSuccessMessage("A new OTP has been sent to your email");
 
     try {
-      const res = await fetch("http://localhost:7285/api/resend-otp", {
+      const res = await fetch("https://localhost:7285/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -121,6 +122,7 @@ export default function OTPVerification() {
         setCanResend(false);
       } else {
         setErrorMessage("Failed to resend OTP");
+        setSuccessMessage("");
       }
     } catch (err) {
       setErrorMessage("An error occurred: " + err.message);

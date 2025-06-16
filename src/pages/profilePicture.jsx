@@ -1,20 +1,24 @@
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePic() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState(
+    "Account created. Set profile photo"
+  );
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleFileSelect = (file) => {
     if (!file) return;
 
     // Validate file type
-    if (!file.type.startsWith('image/')) {
+    if (!file.type.startsWith("image/")) {
       setErrorMessage("Please select a valid image file");
       return;
     }
@@ -69,25 +73,27 @@ export default function ProfilePic() {
     setSuccessMessage("");
 
     const formData = new FormData();
-    formData.append('profilePhoto', selectedImage);
+    formData.append("file", selectedImage);
+    const email = localStorage.getItem("email");
+    formData.append("email", email);
+    console.log(email)
 
     try {
-      const res = await fetch("http://localhost:7285/api/set-profile-picture", {
+      const res = await fetch("https://localhost:7285/api/setdp", {
         method: "POST",
         body: formData,
       });
 
-      const data = await res.json();
-
+      const data = await res.json(); 
+      console.log(data)
       if (res.ok) {
-        setSuccessMessage("Profile picture set successfully!");
+        setSuccessMessage(data.message);
       } else {
         setErrorMessage(data.message || "Failed to set profile picture");
       }
     } catch (err) {
       setErrorMessage("An error occurred: " + err.message);
     }
-
     setIsLoading(false);
   };
 
@@ -97,13 +103,14 @@ export default function ProfilePic() {
     setErrorMessage("");
     setSuccessMessage("");
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
   const handleSkip = () => {
     // Navigate to next page or complete profile setup
     console.log("Skipping profile photo upload");
+    navigate("/");
   };
 
   const styles = {
@@ -343,18 +350,19 @@ export default function ProfilePic() {
           </div>
           <h1 style={styles.title}>Set Profile Picture</h1>
           <p style={styles.subtitle}>
-            Choose a photo that represents you - it will be displayed as a circle
+            Choose a photo that represents you - it will be displayed as a
+            circle
           </p>
         </div>
 
         {/* Error/Success Messages */}
         {errorMessage && (
-          <div style={{...styles.messageText, ...styles.errorText}}>
+          <div style={{ ...styles.messageText, ...styles.errorText }}>
             {errorMessage}
           </div>
         )}
         {successMessage && (
-          <div style={{...styles.messageText, ...styles.successText}}>
+          <div style={{ ...styles.messageText, ...styles.successText }}>
             {successMessage}
           </div>
         )}
@@ -365,21 +373,25 @@ export default function ProfilePic() {
             {/* Image Preview or Upload Area */}
             {imagePreview ? (
               <div style={styles.previewContainer}>
-                <img 
-                  src={imagePreview} 
-                  alt="Profile preview" 
+                <img
+                  src={imagePreview}
+                  alt="Profile preview"
                   style={styles.previewImage}
                 />
                 <div style={styles.previewText}>
                   Preview: {selectedImage?.name}
                 </div>
-                <div style={{...styles.previewText, color: "#25D366", fontWeight: "600", marginBottom: "12px"}}>
+                <div
+                  style={{
+                    ...styles.previewText,
+                    color: "#25D366",
+                    fontWeight: "600",
+                    marginBottom: "12px",
+                  }}
+                >
                   Perfect! This will be your profile picture
                 </div>
-                <button
-                  onClick={handleRemoveImage}
-                  style={styles.removeButton}
-                >
+                <button onClick={handleRemoveImage} style={styles.removeButton}>
                   Remove photo
                 </button>
               </div>
@@ -393,14 +405,20 @@ export default function ProfilePic() {
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
-                onMouseEnter={(e) => 
-                  !isDragOver && Object.assign(e.target.style, styles.uploadAreaHover)
+                onMouseEnter={(e) =>
+                  !isDragOver &&
+                  Object.assign(e.target.style, styles.uploadAreaHover)
                 }
-                onMouseLeave={(e) => 
-                  !isDragOver && Object.assign(e.target.style, styles.uploadArea)
+                onMouseLeave={(e) =>
+                  !isDragOver &&
+                  Object.assign(e.target.style, styles.uploadArea)
                 }
               >
-                <svg style={styles.uploadIcon} fill="currentColor" viewBox="0 0 24 24">
+                <svg
+                  style={styles.uploadIcon}
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,11A1,1 0 0,0 11,12A1,1 0 0,0 12,13A1,1 0 0,0 13,12A1,1 0 0,0 12,11Z" />
                 </svg>
                 <div style={styles.uploadText}>
@@ -408,7 +426,7 @@ export default function ProfilePic() {
                 </div>
                 <div style={styles.uploadSubtext}>
                   or{" "}
-                  <span 
+                  <span
                     style={styles.browseLink}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -443,7 +461,9 @@ export default function ProfilePic() {
                 ...(isLoading || !selectedImage ? styles.buttonDisabled : {}),
               }}
               onMouseEnter={(e) =>
-                !isLoading && selectedImage && Object.assign(e.target.style, styles.buttonHover)
+                !isLoading &&
+                selectedImage &&
+                Object.assign(e.target.style, styles.buttonHover)
               }
               onMouseLeave={(e) =>
                 !isLoading && Object.assign(e.target.style, styles.button)
@@ -469,10 +489,15 @@ export default function ProfilePic() {
                 ...(isLoading ? styles.buttonDisabled : {}),
               }}
               onMouseEnter={(e) =>
-                !isLoading && Object.assign(e.target.style, styles.buttonSecondaryHover)
+                !isLoading &&
+                Object.assign(e.target.style, styles.buttonSecondaryHover)
               }
               onMouseLeave={(e) =>
-                !isLoading && Object.assign(e.target.style, {...styles.button, ...styles.buttonSecondary})
+                !isLoading &&
+                Object.assign(e.target.style, {
+                  ...styles.button,
+                  ...styles.buttonSecondary,
+                })
               }
             >
               Skip for now
@@ -484,8 +509,8 @@ export default function ProfilePic() {
         <div style={styles.loginContainer}>
           <p style={styles.loginText}>
             Want to change your account?{" "}
-            <a
-              href="/"
+            <Link
+              to="/"
               style={{
                 color: "#25D366",
                 textDecoration: "none",
@@ -493,7 +518,7 @@ export default function ProfilePic() {
               }}
             >
               Go back to login
-            </a>
+            </Link>
           </p>
         </div>
       </div>

@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/login';
 import Registration from './pages/Registration';
 import OTPVerification from './pages/otpVerification'
+import ProfilePic from './pages/profilePicture'
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
         <Route path="/whatsapp" element={<Whatsapp />} />
         <Route path="/register" element={<Registration />} /> 
         <Route path="/otp" element={<OTPVerification />} /> 
+        <Route path="/pic" element={<ProfilePic />} /> 
+
 
       </Routes>
     </Router>
