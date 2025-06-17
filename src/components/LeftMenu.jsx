@@ -262,8 +262,17 @@ export default function LeftMenu({ onSelectUser }) {
         </div>
       )}
 
-      <ChatBar filter={filter} chatUsers={chatUsers} />
+      <ChatBar
+        filter={filter}
+        chatUsers={chatUsers}
+        onChatSelect={(user) => {
+          console.log("Selected user:", selectedUser);
 
+          setSelectedUser(user); // for local LeftMenu logic
+          onSelectUser(user); // updates ChatDetail in parent
+        }}
+        
+      />
     </div>
   );
 }

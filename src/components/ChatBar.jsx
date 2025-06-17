@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { chatsData } from "../data/chatsData";
 import Chat from "./Chat";
 
-export default function ChatBar({ filter, chatUsers }) {
+export default function ChatBar({ filter, chatUsers, onChatSelect }) {
   const [chats, setChats] = useState(chatsData);
 
   useEffect(() => {
-    // Convert chatUsers to chat-style objects
     const chatUserChats = chatUsers.map((user) => ({
       user_id: user.user_id,
       pp: user.profile_pic_url,
@@ -16,13 +15,11 @@ export default function ChatBar({ filter, chatUsers }) {
       unreadMsgs: 0,
     }));
 
-    // Remove any chatUsers from chatsData to avoid duplicates
     const remainingChats = chatsData.filter(
       (chat) => !chatUsers.some((user) => user.user_id === chat.user_id)
     );
 
-    // Combine with user chats at top
-    let combinedChats = [...chatUserChats, ...remainingChats];
+    const combinedChats = [...chatUserChats, ...remainingChats];
 
     const newChats = filter
       ? combinedChats.filter((chat) => chat.unreadMsgs)
@@ -32,20 +29,27 @@ export default function ChatBar({ filter, chatUsers }) {
   }, [filter, chatUsers]);
 
   return (
-    // main chats container
-    <div className="flex flex-col overflow-y-scroll cursor-pointer h-full ">
-      {/* chats */}
+    <div className="flex flex-col overflow-y-scroll cursor-pointer h-full">
       <div>
         {chats.map((chat, i) => {
+          const fullUser = {
+            user_id: chat.user_id,
+            profile_pic_url: chat.pp,
+            first_name: chat.contact?.split(" ")[0] || "Unknown",
+            last_name: chat.contact?.split(" ").slice(1).join(" ") || "",
+          };
+
           return (
-            <Chat
-              pp={chat.pp}
-              contact={chat.contact}
-              msg={chat.msg}
-              time={chat.time}
-              unread={chat.unreadMsgs}
-              active={i === 0}
-            />
+            <div key={i} onClick={() => onChatSelect(fullUser)}>
+              <Chat
+                pp={chat.pp}
+                contact={chat.contact}
+                msg={chat.msg}
+                time={chat.time}
+                unread={chat.unreadMsgs}
+                active={i === 0}
+              />
+            </div>
           );
         })}
       </div>

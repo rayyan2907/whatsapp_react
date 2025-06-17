@@ -9,13 +9,27 @@ import Message from "./Message";
 import { getTime } from "../logic/functions";
 
 export default function ChatDetail({ selectedUser }) {
-  const [messages, setMessages] = useState(messagesData);
+  const [messages, setMessages] = useState([]);
   const inputRef = useRef(null);
   const bottomRef = useRef(null);
   const [typing, setTyping] = useState(false);
   const HandelInput = () => {
     inputRef.current.value.length === 0 ? setTyping(false) : setTyping(true);
   };
+  const fetchMessagesForUser = (userId) => {
+    // Simulate fetching old messages
+    return [
+      { msg: "Hello!", time: "10:00 AM", sent: false },
+      { msg: "Hi!", time: "10:01 AM", sent: true },
+    ];
+  };
+  useEffect(() => {
+    if (selectedUser) {
+      console.log("selected user in message box",selectedUser)
+      const oldMessages = fetchMessagesForUser(selectedUser.user_id);
+      setMessages(oldMessages);
+    }
+  }, [selectedUser]);
 
   const addMessage = (msg) => {
     const newMessage = [...messages, msg];
@@ -34,6 +48,7 @@ export default function ChatDetail({ selectedUser }) {
       setTyping(false);
     }
   };
+  
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({

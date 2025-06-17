@@ -11,6 +11,7 @@ import ChatDetail from '../components/ChatDetail'
 export default function Whatsapp() {
 
   const [selectedUser, setSelectedUser] = useState(null);
+  console.log("selected user in parent part",selectedUser)
 
   return (
     <div className="w-screen h-screen overflow-hidden">
