@@ -68,6 +68,7 @@ export default function ChatDetail({ selectedUser }) {
       </div>
     );
   }
+  
 
   return (
     <div className="flex flex-col h-screen">

@@ -7,9 +7,9 @@ import { BsFillChatTextFill } from "react-icons/bs";
 import { HiDotsVertical } from "react-icons/hi";
 import { BiFilter } from "react-icons/bi";
 import { pp } from "../assets/whatsapp";
+import { useNavigate } from "react-router-dom";
 
 export default function LeftMenu({ onSelectUser }) {
-
   const [filter, setFilter] = useState(false);
   const user = JSON.parse(localStorage.getItem("user"));
   console.log(user.first_name);
@@ -19,6 +19,8 @@ export default function LeftMenu({ onSelectUser }) {
   const [searchResults, setSearchResults] = useState([]);
   const [typingTimeout, setTypingTimeout] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const navigate = useNavigate();
+  const [chatUsers, setChatUsers] = useState([]);
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -42,8 +44,6 @@ export default function LeftMenu({ onSelectUser }) {
       const token = localStorage.getItem("jwt");
       if (token === null) {
         localStorage.setItem("logoutMessage", "You have been logged out.");
-
-        window.location.href = "/";
       }
       const res = await fetch(
         `https://localhost:7285/getUser?prefix=${query}`,
@@ -54,7 +54,11 @@ export default function LeftMenu({ onSelectUser }) {
           },
         }
       );
-
+      if (res.status === 401) {
+        localStorage.setItem("logoutMessage", "You have been logged out.");
+        navigate("/"); // Force logout
+        return;
+      }
       if (res.ok) {
         const data = await res.json();
         setSearchResults(data);
@@ -64,6 +68,8 @@ export default function LeftMenu({ onSelectUser }) {
     } catch (err) {
       console.error(err);
       setSearchResults([]);
+      localStorage.setItem("logoutMessage", "You have been logged out.");
+      window.location.href = "/";
     }
   };
 
@@ -74,7 +80,7 @@ export default function LeftMenu({ onSelectUser }) {
         <img
           src={user.profile_pic_url}
           alt="profile_pic"
-          className="rounded-full w-[32px] cursor-pointer"
+          className="rounded-full w-[40px] cursor-pointer"
           onClick={() => setShowProfileModal(true)}
         />
         <div className="flex justify-between w-[150px]">
@@ -188,7 +194,7 @@ export default function LeftMenu({ onSelectUser }) {
             top: "120px",
             left: "16px",
             right: "16px",
-            backgroundColor: "#111b21",
+            backgroundColor: "#0f0f0f",
             padding: "10px",
             maxHeight: "300px",
             maxWidth: "410px",
@@ -218,6 +224,11 @@ export default function LeftMenu({ onSelectUser }) {
                   onSelectUser(u);
                   setSearchText("");
                   setSearchResults([]);
+                  setChatUsers((prev) => {
+                    if (prev.some((user) => user.user_id === u.user_id))
+                      return prev;
+                    return [...prev, u];
+                  });
                 }}
                 className="hover:bg-[#2a3942] rounded-full transition-all duration-200"
               >
@@ -251,7 +262,8 @@ export default function LeftMenu({ onSelectUser }) {
         </div>
       )}
 
-      <ChatBar filter={filter} />
+      <ChatBar filter={filter} chatUsers={chatUsers} />
+
     </div>
   );
 }

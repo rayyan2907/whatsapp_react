@@ -13,6 +13,30 @@ export default function ProfilePic() {
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+  const cropToSquare = (file) => {
+    return new Promise((resolve) => {
+      const image = new Image();
+      image.src = URL.createObjectURL(file);
+      image.onload = () => {
+        const size = Math.min(image.width, image.height);
+        const offsetX = (image.width - size) / 2;
+        const offsetY = (image.height - size) / 2;
+
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(image, offsetX, offsetY, size, size, 0, 0, size, size);
+
+        canvas.toBlob((blob) => {
+          const squareFile = new File([blob], "profile.jpg", {
+            type: "image/jpeg",
+          });
+          resolve(squareFile);
+        }, "image/jpeg");
+      };
+    });
+  };
 
   const handleFileSelect = (file) => {
     if (!file) return;
@@ -71,12 +95,13 @@ export default function ProfilePic() {
     setIsLoading(true);
     setErrorMessage("");
     setSuccessMessage("");
+    const croppedFile = await cropToSquare(selectedImage);
 
     const formData = new FormData();
-    formData.append("Pic", selectedImage);
+    formData.append("Pic", croppedFile);
     const email = localStorage.getItem("email");
     formData.append("email", email);
-    console.log(email)
+    console.log(email);
 
     try {
       const res = await fetch("https://localhost:7285/api/setdp", {
@@ -84,11 +109,11 @@ export default function ProfilePic() {
         body: formData,
       });
 
-      const data = await res.json(); 
-      console.log(data)
+      const data = await res.json();
+      console.log(data);
       if (res.ok) {
         setSuccessMessage(data.message);
-        navigate("/")
+        navigate("/");
       } else {
         setErrorMessage(data.message || "Failed to set profile picture");
       }
