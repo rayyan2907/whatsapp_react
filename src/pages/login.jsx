@@ -13,7 +13,15 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
   const [successMessage, setSuccessMessage] = useState("");
+  const [logoutMsg, setLogoutMsg] = useState("");
 
+  useEffect(() => {
+    const msg = localStorage.getItem("logoutMessage");
+    if (msg) {
+      setLogoutMsg(msg);
+      localStorage.removeItem("logoutMessage"); // clean up
+    }
+  }, []);
   useEffect(() => {
     if (location.state?.successMessage) {
       setSuccessMessage(location.state.successMessage);
@@ -33,12 +41,13 @@ export default function Login() {
 
     const { email, password } = formData;
     if (!email || !password) {
-      setErrorMessage("Please enter your credintials");
+      setErrorMessage("Please enter your credentials");
       setIsLoading(false);
       return;
     }
+
     try {
-      const res = await fetch("http://localhost:7285/api/login", {
+      const res = await fetch("https://localhost:7285/whatsapp/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,16 +56,20 @@ export default function Login() {
       });
 
       const data = await res.json();
+      console.log("Login Response:", data); // Helpful debug log
 
       if (res.ok && data.token) {
         localStorage.setItem("jwt", data.token);
-        localStorage.setItem("user", JSON.stringify(result.user));
-        window.location.href = "/whatsapp"; // redirect to WhatsApp main page
+
+        localStorage.setItem("user", JSON.stringify(data.user));
+        window.location.href = "/whatsapp";
       } else {
         setErrorMessage(data.message || "Invalid credentials");
+        setLogoutMsg("")
       }
     } catch (err) {
-      setErrorMessage("An error occurred while logging in." + err);
+      console.error("Login error: ", err);
+      setErrorMessage("An error occurred while logging in. " + err);
     }
     setIsLoading(false);
   };
@@ -269,7 +282,7 @@ export default function Login() {
         </div>
         {errorMessage && (
           <p
-            style={{ color: "red", textAlign: "center", marginBottom: "16px" }}
+            style={{ color: "red", textAlign: "center", marginBottom: "10px" }}
           >
             {errorMessage}
           </p>
@@ -279,6 +292,10 @@ export default function Login() {
             {successMessage}
           </div>
         )}
+        {logoutMsg && (
+          <div style={{ color: "green", textAlign: "center", marginBottom: "10px" }}>{logoutMsg}</div>
+        )}
+
         {/* Login Form */}
         <div style={styles.formContainer}>
           <div>

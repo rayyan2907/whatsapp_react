@@ -8,60 +8,66 @@ import { messagesData } from "../data/chatsData";
 import Message from "./Message";
 import { getTime } from "../logic/functions";
 
-export default function ChatDetail() {
+export default function ChatDetail({ selectedUser }) {
   const [messages, setMessages] = useState(messagesData);
   const inputRef = useRef(null);
-  const bottomRef = useRef(null)
+  const bottomRef = useRef(null);
   const [typing, setTyping] = useState(false);
+  const HandelInput = () => {
+    inputRef.current.value.length === 0 ? setTyping(false) : setTyping(true);
+  };
 
-  const HandelInput = ()=> {
-    inputRef.current.value.length===0 ? setTyping(false) : setTyping(true)
-  }
+  const addMessage = (msg) => {
+    const newMessage = [...messages, msg];
+    setMessages(newMessage);
+  };
 
- 
-  const addMessage = (msg)=>{
-    const newMessage= [...messages,msg ]
-    setMessages(newMessage)
-  }
+  const handelInput = () => {
+    if (inputRef.current.value.length > 0) {
+      addMessage({
+        msg: inputRef.current.value,
+        time: getTime(),
+        sent: true,
+      });
+      inputRef.current.value = "";
+      inputRef.current.focus();
+      setTyping(false);
+    }
+  };
 
- const handelInput = ()=>{
-    
-
-  if(inputRef.current.value.length>0){
-
-    addMessage({
-      msg: inputRef.current.value,
-      time: getTime(),
-      sent: true,
-    })
-    inputRef.current.value=""
-    inputRef.current.focus()
-    setTyping(false)
-  }
-
-
-  }
-
-
-  useEffect(()=>{
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({
       behaviour: "smooth",
-    })
-  },[messages])
+    });
+  }, [messages]);
 
-
-
-  useEffect(()=>{
-
+  useEffect(() => {
     const listener = (e) => {
-      if (e.code==="Enter"){
-        handelInput()
+      if (e.code === "Enter") {
+        handelInput();
       }
-    }
+    };
 
-    document.addEventListener("keydown",listener)
-    return()=> document.removeEventListener("keydown",listener)
-  })
+    document.addEventListener("keydown", listener);
+    return () => document.removeEventListener("keydown", listener);
+  });
+  if (!selectedUser) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
+          backgroundColor: "#0a131a",
+          color: "white",
+          fontSize: "1.125rem", // text-lg
+        }}
+      >
+        Select a user to start chatting
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen">
@@ -69,16 +75,19 @@ export default function ChatDetail() {
       <div className="flex justify-between bg-[#202d33] h-[60px] p-3 ">
         {/* details */}
         <div className="flex items-center">
-          {/* pfp */}
           <img
-            src={cs1}
+            src={selectedUser.profile_pic_url}
             alt="profile_pic"
-            className="rounded-full w-[40px] h-[40px] mr-5 "
+            style={{
+              borderRadius: "9999px", // fully rounded
+              width: "40px",
+              height: "40px",
+              marginRight: "10px",
+              marginLeft: "10px",
+            }}
           />
-          {/* contact info */}
 
           <div className="flex flex-col ">
-            {/*contact  */}
             <h1
               style={{
                 margin: 7,
@@ -88,10 +97,9 @@ export default function ChatDetail() {
                 color: "white",
               }}
             >
-              RAYYAN
+              {selectedUser.first_name} {selectedUser.last_name}
             </h1>
 
-            {/* status */}
             <p
               style={{
                 margin: 7,
@@ -121,7 +129,7 @@ export default function ChatDetail() {
             sent={msg.sent}
           />
         ))}
-        <div ref={bottomRef}/>
+        <div ref={bottomRef} />
       </div>
 
       {/* send messages */}
@@ -163,7 +171,7 @@ export default function ChatDetail() {
           }}
         >
           {typing ? (
-            <Roundedbtn icon={<MdSend size={19} /> }onClick={handelInput} />
+            <Roundedbtn icon={<MdSend size={19} />} onClick={handelInput} />
           ) : (
             <Roundedbtn icon={<BsFillMicFill size={19} />} />
           )}

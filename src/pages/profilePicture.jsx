@@ -73,7 +73,7 @@ export default function ProfilePic() {
     setSuccessMessage("");
 
     const formData = new FormData();
-    formData.append("file", selectedImage);
+    formData.append("Pic", selectedImage);
     const email = localStorage.getItem("email");
     formData.append("email", email);
     console.log(email)
@@ -88,6 +88,7 @@ export default function ProfilePic() {
       console.log(data)
       if (res.ok) {
         setSuccessMessage(data.message);
+        navigate("/")
       } else {
         setErrorMessage(data.message || "Failed to set profile picture");
       }
