@@ -46,7 +46,7 @@ export default function LeftMenu({ onSelectUser }) {
         localStorage.setItem("logoutMessage", "You have been logged out.");
       }
       const res = await fetch(
-        `https://localhost:7285/getUser?prefix=${query}`,
+        `https://whatsappclonebackend.azurewebsites.net/getUser?prefix=${query}`,
         {
           method: "GET",
           headers: {
