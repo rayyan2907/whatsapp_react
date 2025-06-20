@@ -104,7 +104,7 @@ export default function ProfilePic() {
     console.log(email);
 
     try {
-      const res = await fetch("https://localhost:7285/api/setdp", {
+      const res = await fetch("https://whatsappclonebackend.azurewebsites.net/api/setdp", {
         method: "POST",
         body: formData,
       });

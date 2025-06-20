@@ -72,7 +72,7 @@ export default function OTPVerification() {
 
     try {
         
-      const res = await fetch("https://localhost:7285/api/enterotp", {
+      const res = await fetch("https://whatsappclonebackend.azurewebsites.net/api/enterotp", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

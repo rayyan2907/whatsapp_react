@@ -47,7 +47,7 @@ export default function Login() {
     }
 
     try {
-      const res = await fetch("https://localhost:7285/whatsapp/login", {
+      const res = await fetch("https://whatsappclonebackend.azurewebsites.net/whatsapp/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

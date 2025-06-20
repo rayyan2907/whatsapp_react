@@ -43,7 +43,7 @@ export default function WhatsAppRegistration() {
     }
 
     try {
-      const res = await fetch("https://localhost:7285/api/register", {
+      const res = await fetch("https://whatsappclonebackend.azurewebsites.net/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

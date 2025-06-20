@@ -270,8 +270,9 @@ export default function LeftMenu({ onSelectUser }) {
 
           setSelectedUser(user); // for local LeftMenu logic
           onSelectUser(user); // updates ChatDetail in parent
+          
         }}
-        
+        selectedUser={selectedUser}
       />
     </div>
   );

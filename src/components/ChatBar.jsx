@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { chatsData } from "../data/chatsData";
 import Chat from "./Chat";
 
-export default function ChatBar({ filter, chatUsers, onChatSelect }) {
+export default function ChatBar({ filter, chatUsers, onChatSelect, selectedUser }) {
   const [chats, setChats] = useState(chatsData);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function ChatBar({ filter, chatUsers, onChatSelect }) {
                 msg={chat.msg}
                 time={chat.time}
                 unread={chat.unreadMsgs}
-                active={i === 0}
+                  active={selectedUser?.user_id === chat.user_id}
               />
             </div>
           );
